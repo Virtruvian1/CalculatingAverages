@@ -4,35 +4,30 @@ namespace CalculatingAverages
 {
     class Program
     {
+        public static int formula;
         static void Main(string[] args)
         {
-            var userInput = CheckInput();
-            if (userInput == 1)
-            {   
-                Console.WriteLine($"The sum of integers is {SumOfNum()}"); // Part 1
-            }
-            else if (userInput == 2)
+            CheckInput();
+            var result = Calculate();
+            var letterGrade = Grade(result);
+            if (formula == 1)
             {
-                var result = Average();
-                var letter = Grade(result);
-                Console.WriteLine($"The average of grades is {result} -- {letter}"); // Part 2 // Bug 01: Repeats CheckInput()
+                Console.WriteLine($"The sum of integers is {result}");
             }
-            else if (userInput == 3)
+            else if (formula == 2 || formula == 3 || formula == 4)
             {
-                var result = Average();
-                var letter = Grade(result);
-                Console.WriteLine($"The average of grades is {result} -- {letter}"); // Part 3
+                Console.WriteLine($"The average of grades is {result} -- {letterGrade}");
             }
-            else if (userInput == 4)
+            else
             {
-
+                Console.WriteLine("Something went wrong.");
             }
         }
 
         public static int CheckInput()
         {
             bool validInput = false;
-            int formula;
+            
 
             do
             {
@@ -50,62 +45,101 @@ namespace CalculatingAverages
             } while (!validInput);
             return formula;
         }
-
-        public static int[] GradeInput()
+        public static int Calculate()
         {
-            var userInput = CheckInput();
             bool validInput = false;
-            int i, temp, n = 10;
+            int i, temp; // Counter, Storage
+            var n = Iterations(); // Specifies value from Iterations()
             int[] array1 = new int[n];
-            
-            if (userInput == 3) // Part 3
-            {
-                Console.Write("How many grades are you inputing? ");
-                int g = int.Parse(Console.ReadLine());
-                n = g;
-            }
-            for (i = 0; i < n; i++)
-            {
+
+            for (i = 0; i < n && formula == 1 && formula == 2 && formula == 3; i++)
+            { 
+
                 do
                 {
-                    Console.Write($"Input {i + 1} grades (0-100): ", array1);
-                    temp = int.Parse(Console.ReadLine());
-                    if (temp >= 0 && temp <= 100)
+                    Console.Write($"Input {i + 1} grades (0-100): ", array1); // Asks for grades
+                    temp = int.Parse(Console.ReadLine()); // Accepts grades and store in temp
+                    if (temp >= 0 && temp <= 100) // Checks temp if in range
                     {
-                        validInput = true;
+                        validInput = true; // Verfies true
                     }
                     else
                     {
-                        Console.WriteLine("Invalid Input!");
+                        Console.WriteLine("Invalid Input!"); // Not an acceptable answer, repeat
                     }
-                } while (validInput == false);
-                array1[i] = temp;
+                } while (!validInput);
+                array1[i] = temp; // stores temp in array
+
             }
-            return array1;
-        }
-
-        public static int SumOfNum()
-        {
-            int sum = 0;
-            Array.ForEach(GradeInput(), delegate (int i) { sum += i; });
-            return sum;
-        }
-
-        public static double Average()
-        {
-            var userInput = CheckInput();
-            var sum = SumOfNum();
-            var n = 10;
-            if (userInput == 3) // Part 3
+            for (i = 0; i <= n && formula == 4; i++, n++)
             {
-                Console.Write("How many grades did you input? ");
-                int g = int.Parse(Console.ReadLine());
-                n = g;
-            }
-            double avg = sum / n;
-            return avg;
-        }
 
+                do
+                {
+                    Console.Write($"Input {i + 1} grades (0-100): ", array1); // Asks for grades
+                    temp = int.Parse(Console.ReadLine()); // Accepts grades and store in temp
+                    if (temp >= 0 && temp <= 100) // Checks temp if in range
+                    {
+                        validInput = true; // Verfies true
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid Input!"); // Not an acceptable answer, repeat
+                    }
+                    Console.WriteLine("Continue (Y/N)? ");
+                    string cont = Console.ReadLine();
+                    if (cont == "n" || cont == "N")
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                } while (!validInput);
+                array1[i] = temp; // stores temp in array
+
+            }
+            // return array1; // returns array
+            var userInput = formula; // Checks user input
+            if (userInput == 1)
+            {
+                int sum = 0;
+                Array.ForEach(array1, delegate (int count) { sum += count; });
+                return sum;
+            }
+            else if (userInput == 2 || userInput == 3 || userInput == 4)
+            {
+                int sum = 0;
+                Array.ForEach(array1, delegate (int count) { sum += count; });
+                int result = sum / array1.Length;
+                return result;
+            }
+            else
+                return 0;
+        }
+        public static int Iterations()
+        {
+            var userInput = formula; // Check User Input
+            if (userInput == 1 || userInput == 2)
+            {
+                int n = 10;
+                return n;
+            }
+            else if (userInput == 3)
+            {
+                Console.Write("How many grades do you have? ");
+                int n = int.Parse(Console.ReadLine());
+                return n;
+            }
+            else if (userInput == 4)
+            {
+                int n = 1;
+                return n;
+            }
+            else
+                return 10;
+        }
         public static string Grade(double grade)
         {
             if (grade >= 0 && grade <= 59)
@@ -131,5 +165,7 @@ namespace CalculatingAverages
             else
                 return null;
         }
-    }
+        }
+
+
 }
